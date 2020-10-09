@@ -1,16 +1,34 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { NavigationComponentProps, NavigationFunctionComponent } from 'react-native-navigation';
+import React, { useCallback } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
 
 type OwnProps = {};
 type Props = OwnProps & NavigationComponentProps;
 
-const ChallengesScreen: NavigationFunctionComponent<Props> = () => {
+const ChallengesScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) => {
+  const onPress = useCallback(() => Navigation.push(componentId, {
+    component: {
+      name: 'Speak',
+      options: {
+        topBar: {
+          title: {
+            text: 'Speak',
+          },
+        },
+      },
+    },
+  }), [componentId]);
+
   return (
     <View style={styles.root}>
       <Text>
         Challenges Screen
       </Text>
+      <Button
+        title="Go to Speak"
+        color="#710ce3"
+        onPress={onPress}
+      />
     </View>
   );
 };
