@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Navigation, NavigationComponentProps, NavigationFunctionComponent } from 'react-native-navigation';
+import { CHALLENGES } from '../../core/navigation/screens';
 
 type OwnProps = {};
 type Props = OwnProps & NavigationComponentProps;
@@ -9,7 +10,7 @@ const HomeScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
 
   const onPress = useCallback(() => Navigation.push(componentId, {
     component: {
-      name: 'Challenges',
+      name: CHALLENGES,
       options: {
         topBar: {
           title: {
