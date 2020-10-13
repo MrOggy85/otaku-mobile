@@ -10,8 +10,10 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.5",
     "@react-native-community/voice": "^1.1.9",
     "@reduxjs/toolkit": "^1.4.0",
+    "axios": "^0.20.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-navigation": "^7.1.0",

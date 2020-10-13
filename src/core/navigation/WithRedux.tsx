@@ -1,10 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { NavigationFunctionComponent, NavigationComponentProps } from 'react-native-navigation';
 import store from '../redux/store';
 
-function WithRedux(Component: NavigationFunctionComponent<NavigationComponentProps>) {
-  return function inject(props: NavigationComponentProps) {
+function WithRedux<T>(Component: React.FunctionComponent<T>) {
+  return function inject(props: any) {
     const EnhancedComponent = () => (
       <Provider store={store}>
         <Component

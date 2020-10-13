@@ -43,6 +43,12 @@ type Event = {
   onSpeechResults: null | ((result: string[]) => void);
 }
 
+export function bindEvents(eventListeners: Event) {
+  event.onSpeechStart = eventListeners.onSpeechStart;
+  event.onSpeechEnd = eventListeners.onSpeechEnd;
+  event.onSpeechResults = eventListeners.onSpeechResults;
+}
+
 export const event: Event = {
   onSpeechStart: null,
   onSpeechEnd: null,
