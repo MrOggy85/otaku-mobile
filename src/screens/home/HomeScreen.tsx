@@ -1,16 +1,25 @@
 import React, { useCallback } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Navigation, NavigationComponentProps, NavigationFunctionComponent } from 'react-native-navigation';
-import { CHALLENGES } from '../../core/navigation/screens';
+import { CHALLENGES_LIST } from '../../core/navigation/screens';
 
 type OwnProps = {};
 type Props = OwnProps & NavigationComponentProps;
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'whitesmoke',
+  },
+});
 
 const HomeScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) => {
 
   const onPress = useCallback(() => Navigation.push(componentId, {
     component: {
-      name: CHALLENGES,
+      name: CHALLENGES_LIST,
       options: {
         topBar: {
           title: {
@@ -34,14 +43,5 @@ const HomeScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'whitesmoke',
-  },
-});
 
 export default HomeScreen;

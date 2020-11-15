@@ -1,17 +1,28 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { BASE_URL } from './request';
 
-export type Challenge = {
-  id: number;
-  key: string;
+type Tag = {
+  id: string;
   name: string;
 }
 
+export type Challenge = {
+  id: number;
+  name: string;
+  tags: Tag[];
+}
+
 export async function getChallenges() {
-  const result = await axios.get<Challenge[]>('http://192.168.11.7:8000/challenges');
-  console.log('result', result);
-  if (result.status === 200) {
-    return result.data;
+  let result: AxiosResponse<Challenge[]>;
+  try {
+    result = await axios.get<Challenge[]>(`${BASE_URL}/challenges`);
+  } catch (error) {
+    return null;
   }
 
-  return null;
+  if (result.status !== 200) {
+    return null;
+  }
+
+  return result.data;
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BASE_URL } from './request';
 
 export type Sentence = {
   id: string;
@@ -7,23 +8,21 @@ export type Sentence = {
 }
 
 export async function getAll() {
-  const result = await axios.get<Sentence[]>('http://192.168.11.7:8000/sentences');
-  console.log('result', result);
-  if (result.status === 200) {
-    return result.data;
+  const result = await axios.get<Sentence[]>(`${BASE_URL}/sentences`);
+  if (result.status !== 200) {
+    return null;
   }
 
-  return null;
+  return result.data;
 }
 
 export type SentenceAdd = Omit<Sentence, 'id'>;
 
 export async function add(sentence: SentenceAdd) {
-  const result = await axios.post('http://192.168.11.7:8000/sentences', sentence);
-  console.log('result', result);
-  if (result.status === 200) {
-    return result.data;
+  const result = await axios.post(`${BASE_URL}/sentences`, sentence);
+  if (result.status !== 200) {
+    return null;
   }
 
-  return null;
+  return result.data;
 }

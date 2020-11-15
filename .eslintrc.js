@@ -5,6 +5,7 @@ module.exports = {
     '@react-native-community',
     'plugin:react/all',
     'plugin:react-native/all',
+    'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -37,6 +38,7 @@ module.exports = {
     'react/jsx-sort-props': [2, {
       noSortAlphabetically: true,
     }],
+    'react/jsx-no-bind': 0,
     'react/forbid-component-props': [2, {
       forbid: [],
     }],
@@ -45,5 +47,7 @@ module.exports = {
     // React Native
     'react-native/sort-styles': 0,
     'react-native/no-color-literals': 0,
+
+    '@typescript-eslint/explicit-function-return-type': 0,
   },
 };
