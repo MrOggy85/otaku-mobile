@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState, ComponentProps } from 'react';
 import { View, Text, StyleSheet, Button, Pressable, TextInput, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
-import { SPEAK, SENTENCES } from '../../core/navigation/screens';
+import { SPEAK, SENTENCES } from '../../../core/navigation/screens';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../core/redux/store';
+import { RootState } from '../../../core/redux/store';
 
 type OwnProps = {
   id: number;

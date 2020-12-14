@@ -43,6 +43,7 @@ module.exports = {
       forbid: [],
     }],
     'react/no-multi-comp': 0,
+    'react/require-default-props': 0,
 
     // React Native
     'react-native/sort-styles': 0,

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import {
   Challenge,
   getChallenges as getChallengesRequest,
-} from '../../core/services/challenges';
+} from '../../../core/services/challenges';
 
 const NAMESPACE = 'challenge';
 
@@ -27,6 +27,7 @@ const challengesSlice = createSlice({
   name: NAMESPACE,
   initialState: {
     challenges: [] as Challenge[],
+    loading: false,
   },
   reducers: {
     challenges: (state, action: PayloadAction<Challenge[]>) => {
@@ -35,10 +36,15 @@ const challengesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getChallenges.fulfilled, (state, action) => {
+      state.loading = false;
       if (!action.payload) {
         return;
       }
       state.challenges = action.payload;
+    }).addCase(getChallenges.pending, (state) => {
+      state.loading = true;
+    }).addCase(getChallenges.rejected, (state) => {
+      state.loading = false;
     });
   },
 });
