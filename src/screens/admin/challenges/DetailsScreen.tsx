@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect, useState, ComponentProps } from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, { useEffect, useState, ComponentProps } from 'react';
 import { View, Text, StyleSheet, Button, Pressable, TextInput, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
-import { SPEAK, SENTENCES } from '../../../core/navigation/screens';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../core/redux/store';
+import { updateChallenge, addChallenge, removeChallenge } from './reducer';
+import { getTags } from '../tags/reducer';
 
 type OwnProps = {
-  id: number;
+  id: string;
 };
 type Props = OwnProps & NavigationComponentProps;
 
@@ -22,7 +24,6 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     width: '100%',
-    // alignItems: 'center',
     justifyContent: 'center',
   },
   textInput: {
@@ -31,22 +32,16 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   tagsWrapper: {
-    // flex: 1,
     height: 200,
     width: '90%',
-    // backgroundColor: 'orange',
     flexDirection: 'row',
-    // alignContent: 'flex-start',
-    // justifyContent: 'space-evenly',
     flexWrap: 'wrap',
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 10,
   },
   tagWrapper: {
-    // flex: 1,
     height: 50,
-    // width: 150,
     flexDirection: 'row',
     padding: 10,
     backgroundColor: 'lightgray',
@@ -72,8 +67,9 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     width: '100%',
   },
-  buttonDelete: {
-    backgroundColor: 'red',
+  picker: {
+    flex: 1,
+    height: 50,
   },
 });
 
@@ -81,26 +77,24 @@ type Tag = RootState['challenges']['challenges'][0]['tags'][0]
 
 type TagProps = {
   tagChoices: Tag[];
-  // selectedTag: Tag['id'];
-  // setSelectedTag: React.Dispatch<React.SetStateAction<Tag['id']>>;
   tags: Tag[];
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
 }
 
 const Tags = ({ tagChoices, tags, setTags }: TagProps) => {
   const [selectedTag, setSelectedTag] = useState('');
-  const addDisabled = !selectedTag;
 
   return (
     <View style={{ width: '100%' }}>
-      <Text style={{ marginTop: 20 }}>Tags</Text>
+      <Text style={{ marginTop: 20 }}>
+        Tags
+      </Text>
       <View style={{ flexDirection: 'row' }}>
         <Picker
           selectedValue={selectedTag}
-          style={{ height: 50, flex: 1}}
-          onValueChange={(itemValue, itemIndex) => {
-            // this.setState({language: itemValue})
-            setSelectedTag(itemValue);
+          style={styles.picker}
+          onValueChange={itemValue => {
+            setSelectedTag(itemValue as string);
           }}
         >
           <Picker.Item
@@ -144,18 +138,16 @@ const Tags = ({ tagChoices, tags, setTags }: TagProps) => {
             key={x.id}
             style={styles.tagWrapper}
           >
-            <Text numberOfLines={1} style={styles.tagText}>
+            <Text
+              numberOfLines={1}
+              style={styles.tagText}
+            >
               {x.name}
             </Text>
             <Pressable
               style={styles.tagRemove}
-
               onPress={() => {
                 const newTags = tags.filter(y => y.id !== x.id);
-                // const newTags = [
-                //   ...tags,
-                //   newTag!,
-                // ];
                 setTags(newTags);
               }}
             >
@@ -187,29 +179,36 @@ const pressStyle = (disabled: ButtonDisabled, backgroundColor?: ViewStyle['backg
 
 type SendButtonProps = {
   disabled: ButtonDisabled;
-  isUpdating: boolean;
+  isUpdate: boolean;
+  onPress: () => void;
 }
 
-const SendButton = ({ disabled, isUpdating }: SendButtonProps) => (
-  <Pressable
-    style={pressStyle(disabled)}
-    disabled={disabled}
-    onPress={(): void => {
-      // goToEditScreen(componentId);
-    }}
-  >
-    <Text style={{ color: disabled ? '#AAA' : '#000' }}>
-      {isUpdating ? 'UPDATE' : 'CREATE'}
-    </Text>
-  </Pressable>
-);
+const COLOR_DISABLED = '#AAA';
+const COLOR_ENABLED = '#000';
 
-const DeleteButton = () => (
+const SendButton = ({ disabled, isUpdate, onPress }: SendButtonProps) => {
+  return (
+    <Pressable
+      style={pressStyle(disabled)}
+      disabled={disabled}
+      onPress={onPress}
+    >
+      <Text style={{ color: disabled ? COLOR_DISABLED : COLOR_ENABLED }}>
+        {isUpdate ? 'UPDATE' : 'CREATE'}
+      </Text>
+    </Pressable>
+  );
+};
+
+type DeleteButtonProps = {
+  disabled: ButtonDisabled;
+  onPress: () => void;
+}
+
+const DeleteButton = ({ disabled, onPress }: DeleteButtonProps) => (
   <Pressable
-    style={pressStyle(false, 'red')}
-    onPress={(): void => {
-      // goToEditScreen(componentId);
-    }}
+    style={pressStyle(disabled, 'red')}
+    onPress={onPress}
   >
     <Text>
       DELETE
@@ -218,48 +217,52 @@ const DeleteButton = () => (
 );
 
 const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: Props) => {
+  const dispatch = useDispatch();
   const challenge = useSelector(state => state.challenges.challenges.find(x => x.id === id));
-  const [name, setName] = useState(challenge?.name || '')
-  const [tags, setTags] = useState(challenge?.tags || [])
+  const loading = useSelector(state => state.challenges.loading);
+  const allTags = useSelector(state => state.tags.tags);
+  const [name, setName] = useState(challenge?.name || '');
+  const [tags, setTags] = useState(challenge?.tags || []);
 
-  const sendDisabled = !name;
+  const sendDisabled = !name || loading;
 
-  // const [tags, setTags] = useState([
-  //   {
-  //     label: 'tag1 with a long name',
-  //     id: 'tag1',
-  //   },
-  //   {
-  //     label: 'tag2',
-  //     id: 'tag2',
-  //   },
-  //   {
-  //     label: 'tag3 55 ffknfkn',
-  //     id: 'tag3',
-  //   }]);
+  useEffect(() => {
+    dispatch(getTags());
+  }, [dispatch]);
 
-  // const tags = ['tag1 with a long name', 'tag2', 'tag3 55 ffknfkn'];
-  const tagChoices = [
-    {
-      name: 'tag1337',
-      id: 'tag1337',
-    },
-    {
-      name: 'tag with a very long title',
-      id: 'tag144',
-    },
-    {
-      name: 'tag banana',
-      id: 'tag345',
-    },
-  ].filter(x => !tags.some(t => t.id === x.id))
+  const tagChoices = allTags.filter(x => !tags.some(t => t.id === x.id));
+
+  const onPress = () => {
+    if (!challenge) {
+      dispatch(addChallenge({
+        name,
+        tagIds: tags.map(t => t.id),
+      }));
+    } else {
+      dispatch(updateChallenge({
+        id: challenge.id,
+        name,
+        tagIds: tags.map(t => t.id),
+      }));
+    }
+
+    Navigation.pop(componentId);
+  };
+
+  const onDeletePress = () => {
+    if (!challenge) {
+      return;
+    }
+    dispatch(removeChallenge(challenge?.id));
+    Navigation.pop(componentId);
+  };
 
   return (
     <View style={styles.root}>
-      {challenge?.id && (
+      {challenge && (
         <View style={styles.inputWrapper}>
           <Text selectable>
-            {`ID: ${challenge?.id}`}
+            {`ID: ${challenge.id}`}
           </Text>
         </View>
       )}
@@ -282,11 +285,15 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
       />
       <View style={styles.buttonWrapper}>
         {challenge?.id && (
-          <DeleteButton />
+          <DeleteButton
+            disabled={loading}
+            onPress={onDeletePress}
+          />
         )}
         <SendButton
           disabled={sendDisabled}
-          isUpdating={!!challenge?.id}
+          isUpdate={!!challenge}
+          onPress={onPress}
         />
       </View>
     </View>

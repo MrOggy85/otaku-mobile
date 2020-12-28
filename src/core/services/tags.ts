@@ -20,7 +20,7 @@ type TagAdd = Omit<Tag, 'id'>;
 export async function add(tag: TagAdd) {
   try {
     await axios.post(`${BASE_URL}/tags`, {
-      data: tag,
+      ...tag,
     });
   } catch (error) {
     return false;
@@ -32,7 +32,7 @@ export async function add(tag: TagAdd) {
 export async function update(tag: Tag) {
   try {
     await axios.put(`${BASE_URL}/tags`, {
-      data: tag,
+      ...tag,
     });
   } catch (error) {
     return false;

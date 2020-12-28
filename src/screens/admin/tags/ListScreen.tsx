@@ -2,10 +2,12 @@ import React, { useEffect, ComponentProps } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { NavigationComponentProps, NavigationFunctionComponent } from 'react-native-navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChallenges } from './reducer';
+import { getTags } from './reducer';
 import Button from '../../../components/Button/Button';
 import goToScreen from '../../../core/navigation/goToScreen';
 import DetailsScreen from './DetailsScreen';
+
+type DetailsScreenProps = Omit<ComponentProps<typeof DetailsScreen>, 'componentId'>;
 
 type OwnProps = {};
 type Props = OwnProps & NavigationComponentProps;
@@ -30,12 +32,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type DetailsScreenProps = Omit<ComponentProps<typeof DetailsScreen>, 'componentId'>
-
 function goToEditScreen(componentId: string, id?: string): void {
   goToScreen<DetailsScreenProps>({
-    screenName: 'CHALLENGES_DETAILS',
-    titleText: id ? 'Edit Challenge' : 'New Challenge',
+    screenName: 'TAGS_DETAILS',
+    titleText: id ? 'Edit Tag' : 'New Tag',
     componentId,
     passProps: {
       id: id || '',
@@ -44,14 +44,14 @@ function goToEditScreen(componentId: string, id?: string): void {
 
 const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) => {
   const dispatch = useDispatch();
-  const challenges = useSelector(state => state.challenges.challenges);
-  const loading = useSelector(state => state.challenges.loading);
+  const tags = useSelector(state => state.tags.tags);
+  const loading = useSelector(state => state.tags.loading);
 
   useEffect(() => {
-    if (challenges.length === 0) {
-      dispatch(getChallenges());
+    if (tags.length === 0) {
+      dispatch(getTags());
     }
-  }, [dispatch, challenges]);
+  }, [dispatch, tags]);
 
   return (
     <View style={styles.root}>
@@ -65,7 +65,7 @@ const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
         <Button
           text="Refresh"
           onPress={() => {
-            dispatch(getChallenges());
+            dispatch(getTags());
           }}
           loading={loading}
         />
@@ -78,7 +78,7 @@ const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
             style={styles.activityIndicator}
           />
         )}
-        {challenges.map(x => {
+        {tags.map(x => {
           return (
             <Button
               key={x.id}

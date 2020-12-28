@@ -39,7 +39,7 @@ const AdminScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props)
       />
       <Button
         text="Tags"
-        onPress={() => goTo('SENTENCES', 'Tags', componentId)}
+        onPress={() => goTo('TAGS_LIST', 'Tags', componentId)}
       />
     </View>
   );

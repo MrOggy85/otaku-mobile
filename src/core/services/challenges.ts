@@ -7,12 +7,12 @@ type Tag = {
 }
 
 export type Challenge = {
-  id: number;
+  id: string;
   name: string;
   tags: Tag[];
 }
 
-export async function getChallenges() {
+export async function getAll() {
   let result: AxiosResponse<Challenge[]>;
   try {
     result = await axios.get<Challenge[]>(`${BASE_URL}/challenges`);
@@ -27,10 +27,10 @@ type AddChallenge = Pick<Challenge, 'name'> & {
   tagIds: Tag['id'][];
 }
 
-export async function addChallenge(challenge: AddChallenge) {
+export async function add(challenge: AddChallenge) {
   try {
     await axios.post<Challenge>(`${BASE_URL}/challenges`, {
-      data: challenge,
+      ...challenge,
     });
   } catch (error) {
     return false;
@@ -42,10 +42,10 @@ type UpdateChallenge = Pick<Challenge, 'id' | 'name'> & {
   tagIds: Tag['id'][];
 }
 
-export async function updateChallenge(challenge: UpdateChallenge) {
+export async function update(challenge: UpdateChallenge) {
   try {
     await axios.put<Challenge>(`${BASE_URL}/challenges`, {
-      data: challenge,
+      ...challenge,
     });
   } catch (error) {
     return false;
@@ -53,7 +53,7 @@ export async function updateChallenge(challenge: UpdateChallenge) {
   return true;
 }
 
-export async function removeChallenge(id: Challenge['id']) {
+export async function remove(id: Challenge['id']) {
   try {
     await axios.delete<Challenge>(`${BASE_URL}/challenges/${id}`);
   } catch (error) {

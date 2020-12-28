@@ -3,14 +3,14 @@ import * as screens from './screens';
 
 type Screen = keyof typeof screens
 
-type Params = {
+type Params<P> = {
   screenName: Screen;
   titleText: string;
   componentId: string;
-  passProps?: Record<string, any>;
+  passProps?: P;
 }
 
-function goToScreen({ screenName, titleText, componentId, passProps }: Params) {
+function goToScreen<P>({ screenName, titleText, componentId, passProps }: Params<P>) {
   const name = screens[screenName];
 
   Navigation.push(componentId, {
