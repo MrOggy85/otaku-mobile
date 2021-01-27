@@ -1,12 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState, ComponentProps } from 'react';
-import { View, Text, StyleSheet, Button, Pressable, TextInput, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
-import { Picker } from '@react-native-community/picker';
+import { View, Text, StyleSheet, Pressable, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
 import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../core/redux/store';
 import { updateChallenge, addChallenge, removeChallenge } from './reducer';
 import { getTags } from '../tags/reducer';
+import Input from '../../../components/Input';
+import TagPicker from '../../../components/TagPicker';
 
 type OwnProps = {
   id: string;
@@ -26,149 +25,17 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
   },
-  textInput: {
-    backgroundColor: '#FFF',
-    width: '100%',
-    padding: 5,
-  },
-  tagsWrapper: {
-    height: 200,
-    width: '90%',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  tagWrapper: {
-    height: 50,
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    marginLeft: 10,
-  },
-  tagText: {
-    maxWidth: 100,
-  },
-  tagRemove: {
-    padding: 5,
-    marginLeft: 10,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-  },
   buttonWrapper: {
     width: '100%',
   },
-  picker: {
-    flex: 1,
-    height: 50,
+  tagPickerWrapper: {
+    width: '100%',
   },
 });
 
-type Tag = RootState['challenges']['challenges'][0]['tags'][0]
-
-type TagProps = {
-  tagChoices: Tag[];
-  tags: Tag[];
-  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
-}
-
-const Tags = ({ tagChoices, tags, setTags }: TagProps) => {
-  const [selectedTag, setSelectedTag] = useState('');
-
-  return (
-    <View style={{ width: '100%' }}>
-      <Text style={{ marginTop: 20 }}>
-        Tags
-      </Text>
-      <View style={{ flexDirection: 'row' }}>
-        <Picker
-          selectedValue={selectedTag}
-          style={styles.picker}
-          onValueChange={itemValue => {
-            setSelectedTag(itemValue as string);
-          }}
-        >
-          <Picker.Item
-            label=""
-            value=""
-          />
-          {tagChoices.map(x => (
-            <Picker.Item
-              key={x.id}
-              label={x.name}
-              value={x.id}
-            />
-          ))}
-        </Picker>
-        <View style={{ width: 120 }}>
-          <Button
-            disabled={!selectedTag}
-            onPress={() => {
-              if (!selectedTag) {
-                return;
-              }
-              const newTag = tagChoices.find(x => x.id === selectedTag);
-              if (!newTag) {
-                return;
-              }
-              const newTags = [
-                ...tags,
-                newTag,
-              ];
-              setTags(newTags);
-              setSelectedTag('');
-            }}
-            title="Add"
-          />
-        </View>
-
-      </View>
-      <View style={styles.tagsWrapper}>
-        {tags.map(x => (
-          <View
-            key={x.id}
-            style={styles.tagWrapper}
-          >
-            <Text
-              numberOfLines={1}
-              style={styles.tagText}
-            >
-              {x.name}
-            </Text>
-            <Pressable
-              style={styles.tagRemove}
-              onPress={() => {
-                const newTags = tags.filter(y => y.id !== x.id);
-                setTags(newTags);
-              }}
-            >
-              <Text style={{ }}>
-                X
-              </Text>
-            </Pressable>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-};
-
-type Hej = {
-  pressed: PressableStateCallbackType['pressed'];
-}
-
 type ButtonDisabled = ComponentProps<typeof Pressable>['disabled']
 
-const pressStyle = (disabled: ButtonDisabled, backgroundColor?: ViewStyle['backgroundColor']) => ({ pressed }: Hej): StyleProp<ViewStyle> => ({
+const pressStyle = (disabled: ButtonDisabled, backgroundColor?: ViewStyle['backgroundColor']) => ({ pressed }: PressableStateCallbackType): StyleProp<ViewStyle> => ({
   width: '90%',
   height: 50,
   backgroundColor: disabled ? '#DDD' : pressed ? '#EEE' : backgroundColor || 'skyblue',
@@ -267,22 +134,19 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
         </View>
       )}
       <View style={styles.inputWrapper}>
-        <Text>
-          Name
-        </Text>
-        <TextInput
-          value={name}
-          style={styles.textInput}
-          onChangeText={(text) => {
-            setName(text);
-          }}
+        <Input
+          label="Name"
+          text={name}
+          setText={setName}
         />
       </View>
-      <Tags
-        tags={tags}
-        setTags={setTags}
-        tagChoices={tagChoices}
-      />
+      <View style={styles.tagPickerWrapper}>
+        <TagPicker
+          tags={tags}
+          setTags={setTags}
+          tagChoices={tagChoices}
+        />
+      </View>
       <View style={styles.buttonWrapper}>
         {challenge?.id && (
           <DeleteButton

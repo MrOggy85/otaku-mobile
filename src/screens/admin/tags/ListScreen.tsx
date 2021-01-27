@@ -51,7 +51,8 @@ const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
     if (tags.length === 0) {
       dispatch(getTags());
     }
-  }, [dispatch, tags]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={styles.root}>

@@ -1,8 +1,9 @@
 import React, { useState, ComponentProps } from 'react';
-import { View, Text, StyleSheet, Pressable, TextInput, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
+import { View, Text, StyleSheet, Pressable, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
 import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTag, addTag, removeTag } from './reducer';
+import Input from '../../../components/Input';
 
 type OwnProps = {
   id: string;
@@ -21,11 +22,6 @@ const styles = StyleSheet.create({
   inputWrapper: {
     width: '100%',
     justifyContent: 'center',
-  },
-  textInput: {
-    backgroundColor: '#FFF',
-    width: '100%',
-    padding: 5,
   },
   buttonWrapper: {
     width: '100%',
@@ -127,15 +123,10 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
         </View>
       )}
       <View style={styles.inputWrapper}>
-        <Text>
-          Name
-        </Text>
-        <TextInput
-          value={name}
-          style={styles.textInput}
-          onChangeText={(text) => {
-            setName(text);
-          }}
+        <Input
+          label="Name"
+          text={name}
+          setText={setName}
         />
       </View>
       <View style={styles.buttonWrapper}>
