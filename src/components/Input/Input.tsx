@@ -28,9 +28,11 @@ const Input = ({ label, text, setText}: Props) => {
 
   return (
     <View>
-      <Text style={styles.text}>
-        {label}
-      </Text>
+      {!!label && (
+        <Text style={styles.text}>
+          {label}
+        </Text>
+      )}
       <TextInput
         value={text}
         style={styles.textInput}

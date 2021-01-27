@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { Pressable, Text, ViewStyle, PressableStateCallbackType, StyleProp, ActivityIndicator, StyleSheet } from 'react-native';
 import { accent } from '../../core/colors';
+import Color from 'color';
 
 type PressProps = ComponentProps<typeof Pressable>
 
@@ -9,6 +10,7 @@ type Props = {
   onPress: PressProps['onPress'];
   disabled?: PressProps['disabled'];
   loading?: boolean;
+  color?: keyof typeof accent;
 }
 
 type PressableStateCallback = {
@@ -22,18 +24,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const pressStyle = (disabled: Props['disabled'], loading?: Props['loading'], backgroundColor?: ViewStyle['backgroundColor']) => ({ pressed }: PressableStateCallback): StyleProp<ViewStyle> => ({
+const pressStyle = (disabled: Props['disabled'], loading: Props['loading'], backgroundColor: string) => ({ pressed }: PressableStateCallback): StyleProp<ViewStyle> => ({
   width: '100%',
   height: 50,
-  backgroundColor: loading || disabled ? '#DDD' : pressed ? '#EEE' : backgroundColor || accent.INFO,
+  backgroundColor: loading || disabled ? '#DDD' : pressed ? Color(backgroundColor).darken(0.2).hex() : backgroundColor,
   alignItems: 'center',
   justifyContent: 'center',
 });
 
-const Button = ({ text, onPress, disabled , loading }: Props) => {
-  const style = pressStyle(disabled, loading);
+const Button = ({ text, onPress, disabled , loading, color }: Props) => {
+  const style = pressStyle(disabled, loading, accent[color || 'INFO']);
 
-  const textColor = disabled ? '#999' : accent.WHITE;
+  const textColor = disabled ? '#999' : color === 'WHITE' ? accent.INFO : accent.WHITE;
 
   return (
     <Pressable

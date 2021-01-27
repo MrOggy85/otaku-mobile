@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'whitesmoke',
   },
+  buttonWrapper: {
+    width: '100%',
+    marginBottom: 5,
+  },
 });
 
 type Screen = Parameters<typeof goToScreen>[0]['screenName']
@@ -29,18 +33,24 @@ function goTo(screenName: Screen, titleText: string, componentId: Props['compone
 const AdminScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) => {
   return (
     <View style={styles.root}>
-      <Button
-        text="Challenges"
-        onPress={() => goTo('CHALLENGES_LIST', 'Challenges', componentId)}
-      />
-      <Button
-        text="Sentences"
-        onPress={() => goTo('SENTENCES', 'Sentences', componentId)}
-      />
-      <Button
-        text="Tags"
-        onPress={() => goTo('TAGS_LIST', 'Tags', componentId)}
-      />
+      <View style={styles.buttonWrapper}>
+        <Button
+          text="Challenges"
+          onPress={() => goTo('CHALLENGES_LIST', 'Challenges', componentId)}
+        />
+      </View>
+      <View style={styles.buttonWrapper}>
+        <Button
+          text="Sentences"
+          onPress={() => goTo('SENTENCES_LIST', 'Sentences', componentId)}
+        />
+      </View>
+      <View style={styles.buttonWrapper}>
+        <Button
+          text="Tags"
+          onPress={() => goTo('TAGS_LIST', 'Tags', componentId)}
+        />
+      </View>
     </View>
   );
 };

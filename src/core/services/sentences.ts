@@ -34,9 +34,7 @@ type SentenceUpdate = Omit<Sentence, 'tags'> & {
 
 export async function update(sentence: SentenceUpdate) {
   try {
-    await axios.put(`${BASE_URL}/sentences`, {
-      data: sentence,
-    });
+    await axios.put(`${BASE_URL}/sentences`, sentence);
   } catch (error) {
     return false;
   }
