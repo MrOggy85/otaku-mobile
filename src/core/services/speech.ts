@@ -6,9 +6,11 @@ import Voice, {
 
 const LOCALE = 'ja-JP';
 
-Voice.onSpeechStart = onSpeechStart;
-Voice.onSpeechEnd = onSpeechEnd;
-Voice.onSpeechResults = onSpeechResults;
+export const event: Event = {
+  onSpeechStart: null,
+  onSpeechEnd: null,
+  onSpeechResults: null,
+};
 
 function onSpeechStart(e: SpeechStartEvent) {
   if (e.error) {
@@ -37,6 +39,16 @@ function onSpeechResults(e: SpeechResultsEvent) {
   }
 }
 
+Voice.onSpeechStart = onSpeechStart;
+Voice.onSpeechEnd = onSpeechEnd;
+Voice.onSpeechResults = onSpeechResults;
+Voice.onSpeechError = (e) => {
+  console.log('SpeechError', e.error?.message, e.error?.message);
+};
+Voice.onSpeechRecognized = (e) => {
+  console.log('SpeechRecognized', e.isFinal);
+};
+
 type Event = {
   onSpeechStart: null | ((result: boolean) => void);
   onSpeechEnd: null | (() => void);
@@ -49,17 +61,10 @@ export function bindEvents(eventListeners: Event) {
   event.onSpeechResults = eventListeners.onSpeechResults;
 }
 
-export const event: Event = {
-  onSpeechStart: null,
-  onSpeechEnd: null,
-  onSpeechResults: null,
-};
-
 export async function startSpeaking() {
   try {
     await Voice.start(LOCALE);
   } catch (error) {
-    console.error('Voice.start error', error);
     return false;
   }
 

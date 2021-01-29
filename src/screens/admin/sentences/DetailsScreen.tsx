@@ -7,6 +7,8 @@ import { getTags } from '../tags/reducer';
 import Input from '../../../components/Input';
 import TagPicker from '../../../components/TagPicker';
 import Button from '../../../components/Button';
+import goToScreen from '../../../core/navigation/goToScreen';
+import { addListener } from '../../edit/EditScreen';
 
 type OwnProps = {
   id: string;
@@ -84,7 +86,6 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
   const allTags = useSelector(state => state.tags.tags);
   const [en, setEn] = useState(sentence?.en || '');
   const [ja, setJa] = useState(sentence?.ja || []);
-  console.log('ja', ja);
   const [tags, setTags] = useState(sentence?.tags || []);
 
   const sendDisabled = !en || loading;
@@ -179,19 +180,29 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
                 }}
               />
             </View>
-            <View style={styles.jButtonWrapper}>
-              <Button
-                text="SPK"
-                color="SUCCESS"
-                onPress={() => {}}
-              />
-            </View>
           </View>
 
         ))}
         <View style={styles.addButtonWrapper}>
           <Button
-            text="Add Japanese Sentence"
+            text="Add by Speech"
+            color="SUCCESS"
+            onPress={() => {
+              addListener((jj) => {
+                setJa([
+                  ...ja,
+                  ...jj,
+                ]);
+              });
+              goToScreen({
+                screenName: 'EDIT',
+                titleText: 'Add Japanese Sentences',
+                componentId,
+              });
+            }}
+          />
+          <Button
+            text="Add Manually"
             disabled={ja[ja.length - 1] === ''}
             onPress={() => {
               setJa([
@@ -200,6 +211,7 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
               ]);
             }}
           />
+
         </View>
         <View style={styles.tagPickerWrapper}>
           <TagPicker

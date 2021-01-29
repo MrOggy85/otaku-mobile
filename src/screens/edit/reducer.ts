@@ -25,29 +25,6 @@ export const getSentences = createAsyncThunk(
   },
 );
 
-type Events = Parameters<typeof bindEvents>[0]
-
-function setupEvents(dispatch: ThunkDispatch<any, any, any>) {
-  const onSpeechStart: Events['onSpeechStart'] = (result) => {
-    console.log('onSpeechStart', result);
-    dispatch(editSlice.actions.speaking(result));
-  };
-
-  const onSpeechEnd = () => {
-    dispatch(editSlice.actions.speaking(false));
-  };
-
-  const onSpeechResults: Events['onSpeechResults'] = (result) => {
-    dispatch(editSlice.actions.spoken(result));
-  };
-
-  bindEvents({
-    onSpeechStart,
-    onSpeechEnd,
-    onSpeechResults,
-  });
-}
-
 const editSlice = createSlice({
   name: 'edit',
   initialState: {
@@ -71,5 +48,28 @@ const editSlice = createSlice({
     });
   },
 });
+
+type Events = Parameters<typeof bindEvents>[0]
+
+function setupEvents(dispatch: ThunkDispatch<any, any, any>) {
+  const onSpeechStart: Events['onSpeechStart'] = (result) => {
+    console.log('onSpeechStart', result);
+    dispatch(editSlice.actions.speaking(result));
+  };
+
+  const onSpeechEnd = () => {
+    dispatch(editSlice.actions.speaking(false));
+  };
+
+  const onSpeechResults: Events['onSpeechResults'] = (result) => {
+    dispatch(editSlice.actions.spoken(result));
+  };
+
+  bindEvents({
+    onSpeechStart,
+    onSpeechEnd,
+    onSpeechResults,
+  });
+}
 
 export default editSlice;
