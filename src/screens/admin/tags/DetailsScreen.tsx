@@ -1,9 +1,10 @@
 import React, { useState, ComponentProps } from 'react';
-import { View, Text, StyleSheet, Pressable, StyleProp, ViewStyle, PressableStateCallbackType } from 'react-native';
+import { View, Text, StyleSheet, Pressable, SafeAreaView } from 'react-native';
 import { NavigationComponentProps, NavigationFunctionComponent, Navigation } from 'react-native-navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTag, addTag, removeTag } from './reducer';
 import Input from '../../../components/Input';
+import Button from '../../../components/Button/Button';
 
 type OwnProps = {
   id: string;
@@ -11,10 +12,12 @@ type OwnProps = {
 type Props = OwnProps & NavigationComponentProps;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   root: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: 'whitesmoke',
     padding: '5%',
     paddingTop: 10,
@@ -28,20 +31,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Hej = {
-  pressed: PressableStateCallbackType['pressed'];
-}
-
 type ButtonDisabled = ComponentProps<typeof Pressable>['disabled']
-
-const pressStyle = (disabled: ButtonDisabled, backgroundColor?: ViewStyle['backgroundColor']) => ({ pressed }: Hej): StyleProp<ViewStyle> => ({
-  width: '90%',
-  height: 50,
-  backgroundColor: disabled ? '#DDD' : pressed ? '#EEE' : backgroundColor || 'skyblue',
-  margin: 5,
-  alignItems: 'center',
-  justifyContent: 'center',
-});
 
 type SendButtonProps = {
   disabled: ButtonDisabled;
@@ -49,20 +39,14 @@ type SendButtonProps = {
   onPress: () => void;
 }
 
-const COLOR_DISABLED = '#AAA';
-const COLOR_ENABLED = '#000';
-
 const SendButton = ({ disabled, isUpdate, onPress }: SendButtonProps) => {
   return (
-    <Pressable
-      style={pressStyle(disabled)}
-      disabled={disabled}
+    <Button
+      text={isUpdate ? 'UPDATE' : 'CREATE'}
       onPress={onPress}
-    >
-      <Text style={{ color: disabled ? COLOR_DISABLED : COLOR_ENABLED }}>
-        {isUpdate ? 'UPDATE' : 'CREATE'}
-      </Text>
-    </Pressable>
+      disabled={disabled}
+      color="INFO"
+    />
   );
 };
 
@@ -72,14 +56,12 @@ type DeleteButtonProps = {
 }
 
 const DeleteButton = ({ disabled, onPress }: DeleteButtonProps) => (
-  <Pressable
-    style={pressStyle(disabled, 'red')}
+  <Button
+    text="DELETE"
     onPress={onPress}
-  >
-    <Text>
-      DELETE
-    </Text>
-  </Pressable>
+    disabled={disabled}
+    color="WARN"
+  />
 );
 
 const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: Props) => {
@@ -114,27 +96,29 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
   };
 
   return (
-    <View style={styles.root}>
-      {tag && tag.id && (
+    <SafeAreaView style={styles.wrapper} >
+      <View style={styles.root}>
+        {tag && tag.id && (
         <View style={styles.inputWrapper}>
           <Text selectable>
             {`ID: ${tag.id}`}
           </Text>
         </View>
       )}
-      <View style={styles.inputWrapper}>
-        <Input
-          label="Name"
-          text={name}
-          setText={setName}
-        />
+        <View style={styles.inputWrapper}>
+          <Input
+            label="Name"
+            text={name}
+            setText={setName}
+          />
+        </View>
       </View>
       <View style={styles.buttonWrapper}>
         {tag && (
-          <DeleteButton
-            disabled={loading}
-            onPress={onDeletePress}
-          />
+        <DeleteButton
+          disabled={loading}
+          onPress={onDeletePress}
+        />
         )}
         <SendButton
           disabled={sendDisabled}
@@ -142,7 +126,7 @@ const DetailsScreen: NavigationFunctionComponent<Props> = ({ componentId, id }: 
           onPress={onPress}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
