@@ -3,7 +3,7 @@ import { Pressable, Text, ViewStyle, PressableStateCallbackType, StyleProp, Acti
 import { accent } from '../../core/colors';
 import Color from 'color';
 
-type PressProps = ComponentProps<typeof Pressable>
+type PressProps = ComponentProps<typeof Pressable>;
 
 type Props = {
   text: string;
@@ -11,11 +11,11 @@ type Props = {
   disabled?: PressProps['disabled'];
   loading?: boolean;
   color?: keyof typeof accent;
-}
+};
 
 type PressableStateCallback = {
   pressed: PressableStateCallbackType['pressed'];
-}
+};
 
 const styles = StyleSheet.create({
   text: {
@@ -30,9 +30,10 @@ const pressStyle = (disabled: Props['disabled'], loading: Props['loading'], back
   backgroundColor: loading || disabled ? '#DDD' : pressed ? Color(backgroundColor).darken(0.2).hex() : backgroundColor,
   alignItems: 'center',
   justifyContent: 'center',
+  borderBottomWidth: 0.3,
 });
 
-const Button = ({ text, onPress, disabled , loading, color }: Props) => {
+const Button = ({ text, onPress, disabled, loading, color }: Props) => {
   const style = pressStyle(disabled, loading, accent[color || 'INFO']);
 
   const textColor = disabled ? '#999' : color === 'WHITE' ? accent.INFO : accent.WHITE;
@@ -52,7 +53,7 @@ const Button = ({ text, onPress, disabled , loading, color }: Props) => {
         <Text style={[styles.text, { color: textColor }]}>
           {text}
         </Text>
-      )}
+        )}
 
     </Pressable>
   );

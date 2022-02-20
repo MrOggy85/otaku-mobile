@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type DetailsScreenProps = Omit<ComponentProps<typeof DetailsScreen>, 'componentId'>
+type DetailsScreenProps = Omit<ComponentProps<typeof DetailsScreen>, 'componentId'>;
 
 function goToEditScreen(componentId: string, id?: string): void {
   goToScreen<DetailsScreenProps>({
@@ -39,7 +39,8 @@ function goToEditScreen(componentId: string, id?: string): void {
     componentId,
     passProps: {
       id: id || '',
-    }});
+    }
+  });
 }
 
 const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) => {
@@ -57,17 +58,18 @@ const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
     <View style={styles.root}>
       <View style={styles.topButtonWrapper}>
         <Button
-          text="New"
+          text="NEW"
           onPress={() => {
             goToEditScreen(componentId);
           }}
         />
         <Button
-          text="Refresh"
+          text="REFRESH"
           onPress={() => {
             dispatch(getChallenges());
           }}
           loading={loading}
+          color="SUCCESS"
         />
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -86,6 +88,7 @@ const ListScreen: NavigationFunctionComponent<Props> = ({ componentId }: Props) 
               onPress={() => {
                 goToEditScreen(componentId, x.id);
               }}
+              color="WHITE"
             />
           );
         })}
