@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://www.oskarlindgren.se/otaku-api';
+export const BASE_URL = 'https://otaku.deno.dev';
