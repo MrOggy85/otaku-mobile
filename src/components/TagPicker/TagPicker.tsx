@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   pickerWrapper: {
     borderColor: '#222',
     borderWidth: 2,
-    backgroundColor: 'pink',
+    backgroundColor: 'whitesmoke',
   },
   pickerAndLabelWrapper: {
     flex: 1,
